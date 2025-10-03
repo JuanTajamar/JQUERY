@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtros XML</title>
+</head>
+<body>
+    <h1>Filtros XML</h1>
+    <label>Introuzca ID: </label>
+    <input type="text" id="cajaid"/>
+    <button id="botonatributo">Buscar atributo ID</button>
+    <hr/>
+    <label>Introduzca localidad: </label>
+    <input type="text" id="cajalocalidad">
+    <button id="botonlocalidad">Buscar localidad contains</button>
+    <hr/>
+    <h1 style="color: black" id="mensaje"></h1>
+    <ul id="listadepartamentos"></ul>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#botonlocalidad").click(function(){
+                $.get("documents/departamentos.xml", function(data){
+                    console.log("Leyendo...");
+                    var localidad = $("#cajalocalidad").val();
+                    // El filtro será el siguiente: LOC:contains(GIJON)
+                    var filtro = "LOC:contains(" + localidad + ")";
+                    // Son varios elementos los que podría devolver (each)
+                    var html = "";
+                    $(data).find(filtro).each(function(){
+                        var cosa = $(this).text();
+                        html += "<li>" + cosa + "</li>"
+                    })
+                    $("#listadepartamentos").html(html);
+                })
+            })
+
+
+            $("#botonatributo").click(function(){
+                $.get("documents/departamentos.xml", function(data){
+                    console.log("Leyendo...");
+                    // El filtro será el siguiente: DEPT[DEPT_NO=10]
+                    var id = $("#cajaid").val();
+                    var filtro = "DEPT[DEPT_NO=" + id + "]";
+                    // Solamente tenemos un id por departamento
+                    var nododept = $(data).find(filtro).first();
+                    var nombre = $(nododept).find("DNOMBRE").text();
+                    var localidad = $(nododept).find("LOC").text();
+                    $("#mensaje").text("Departamento: " + nombre + ", Localidad: " + localidad);
+                })               
+            })
+        })
+    </script>
+</body>
+</html>
