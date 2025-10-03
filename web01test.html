@@ -3,10 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="/JQuery/js/jquery-3.7.1.js"></script> 
+    <title>Test JQuery</title>
+    <script src="/js/jquery-3.7.1.js" ></script>
+    <script>
+        // Aquí nuestro código JQuery
+        //La primera siempre debe ser la siguiente
+        $(document).ready(function(){
+            // Aquí dentro las peticiones
+            alert("Hola mundo")
+            $("#boton1").hide();
+
+            // Podemos asociar acciones a los objetos (cuando)
+            $("p").click(function(){
+                // Imprescindible en desarrollo front
+                // Mensajes por consola
+                console.log("Mensaje por consola")
+                $("#boton2").hide()
+                // Existe una palabra clave que indica que accedemos al objeto que ha realizado la llamada: this
+                $(this).hide()
+            })
+
+            $(".rojo").click(function(){
+                $(this).hide()
+            })
+        })
+    </script>
+    <style>
+        .rojo {
+            color: red;
+        }
+    </style>
 </head>
 <body>
-    
+    <h1 class="rojo">Selectores JQuery</h1>
+    <h2>Esto es una prueba</h2>
+    <button class="rojo" id="boton1">Soy un boton 1</button>
+    <button id="boton2">Soy un boton 2</button>
+    <p class="rojo">Parrafo 1</p>
+    <p class="rojo">Parrafo 2</p>
+    <p>Parrafo 3</p>
 </body>
 </html>
