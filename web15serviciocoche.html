@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicio Coches</title>
+</head>
+<body>
+    <h1>Servicio de coches XML</h1>
+    <label>Seleccione un coche</label>
+    <select id="selectorcoche"></select>
+    <div id="contenedor"></div>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(document).ready(function(){
+            // Leemos el servicio y cargamos todos los coches
+            // El servicio lo vamos a leer al inicio y al seleccionar
+            let url = "https://apiclientesxml.azurewebsites.net/"
+            let request = "api/clientes/getcochesxml"
+            $.get(url + request, function(data){
+                 console.log("Leyendo...")
+                 $(data).find("coche").each(function(){
+                    var id = $(this).attr("idcoche");
+                    var marca = $(this).find("marca").text();
+                    var modelo = $(this).find("modelo").text();
+                    var option = $("<option>");
+                    option.val(id)
+                    option.text(marca + " " + modelo)
+                    $("#selectorcoche").append(option)
+                })
+            })
+
+            $("#selectorcoche").change(function(){
+                var id = $(this).val() // El id del option
+                $.get(url + request, function(data){
+                    var filtro = "coche[idcoche=" + id +"]"
+                    var nodo = $(data).find(filtro).first();
+                    var imagen = nodo.find("imagen").text();
+                    $("#contenedor").html("<img src='" + imagen + "'style='width: 150px' 'heigth: 150px''>")
+                })
+            })
+        })
+    </script>
+</body>
+</html>
