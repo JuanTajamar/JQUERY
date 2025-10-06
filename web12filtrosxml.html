@@ -30,7 +30,12 @@
                     var html = "";
                     $(data).find(filtro).each(function(){
                         var cosa = $(this).text();
-                        html += "<li>" + cosa + "</li>"
+                        if() {
+                            html += "<li>" + cosa + "</li>"
+                        } else {
+                            html += "<>liNo se ha ha encontrado la localidad</li>"
+                        }
+
                     })
                     $("#listadepartamentos").html(html);
                 })
