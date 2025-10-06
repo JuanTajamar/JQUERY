@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas de Alumnos</title>
+</head>
+<body>
+    <h1 style="color: black">Alumnos notas XML</h1>
+    <label>Introduzca nota</label>
+    <input type="text" id="nota">
+    <button id="botonnotas">Buscar alumnos</button>
+    <table id="tablanotas">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Apellidos</th>
+            <th>Nota</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+    <h1 style="color: black" id="mensaje"></h1>
+
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#botonnotas").click(function(){
+                $.get("documents/alumnos.xml", function(data){
+                    var notas = parseInt($("#nota").val())
+                    console.log("Leyendo...");
+                    var html = "";
+                    $(data).find("alumno").each(function(){
+                        var id = $(this).attr("idalumno");
+                        var nombre = $(this).find("nombre").first().text();
+                        var apellidos = $(this).find("apellidos").first().text();
+                        var nota = $(this).find("nota").first().text();
+                        if (parseInt(nota) >= notas) {
+                            html += "<tr>";
+                            html += "<td>" + nombre + "</td>"
+                            html += "<td>" + apellidos + "</td>"
+                            html += "<td>" + nota + "</td>"
+                            html += "</tr>";
+                        } else {
+                            $("#mensaje").text("No existe ningun alumno con dicha nota.");
+                        }
+                        $("#tablanotas tbody").html(html)
+                    })
+                })
+            })
+        })
+    </script>
+</body>
+</html>
