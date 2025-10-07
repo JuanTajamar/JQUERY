@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Búsqueda de Jugadores</title>
+</head>
+<body>
+    <h1>Búsqueda Documento JSON</h1>
+    <label>Seleccione un jugador</label>
+    <select id="selectjugador"></select>
+    <div id="containerJugador"></div>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(document).ready(function() {
+            $.getJSON("documents/jugadores.json",  function(data){
+                $.each(data.jugadores, function(index, player){
+                    var nombre = player.nombre;
+                    var option = $("<option>", {"text": nombre, "value": index});
+                    $("#selectjugador").append(option)
+                })
+            })
+            $("#selectjugador").change(function(){
+                var index = $("#selectjugador").val();
+                $.ajax({
+                    url: "documents/jugadores.json",
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data){
+                        console.log("Leyendo...");
+                        var html = "";
+                        // $.each(data.jugadores, function(index, player){
+                        //     var playerName = player.nombre;
+                        //         var posicion = player.posicion;
+                        //         var imagen = player.imagen
+                        //         html += "<h1>" + playerName + "</h1>"
+                        //         html += "<p>" + posicion + "</p>"
+                        //         html += "<img src='" + imagen + "'/>"
+                            
+                        // })
+
+                        var player = data.jugadores[index];
+                        var playerName = player.nombre;
+                        var posicion = player.posicion
+                        var imagen = player.imagen
+                        html += "<h1>" + playerName + "</h1>"
+                        html += "<p>" + posicion + "</p>"
+                        html += "<img src='" + imagen + "'/>"
+
+                        $("#containerJugador").html(html)
+                    }
+                })
+            })
+        }) 
+    </script>
+</body>
+</html>
