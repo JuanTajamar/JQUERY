@@ -10,27 +10,43 @@
     <ul id="listadepartamentos"></ul>
     <script src="js/jquery-3.7.1.js"></script>
     <script>
-        let url = "https://apicruddepartamentospgs.azurewebsites.net/"
+        var url = "https://apicruddepartamentospgs.azurewebsites.net/"
         $(document).ready(function(){
+            console.log("Estoy aquí")
             loadDepartamentos();
-
-
         })
 
         function loadDepartamentos(){
-            let request = "webresources/departamentos";
+            var request = "/webresources/departamentos";
             $.getJSON(url + request, function(data){
                 console.log("Leyendo...");
-                var html = "";
                 $.each(data, function(index, departamento){
                     var numero = departamento.numero;
                     var nombre = departamento.nombre;
                     var localidad = departamento.localidad;
-                    var lista = $("<li>", {"text":nombre, "value": numero})
+                    var lista = $("<li>", {"text": + numero + ", " + nombre + ", " + localidad})
+                    var boton = $("<button>", {"text":"Delete ", "value": numero})
+                    lista.append(boton)
+                    $("#listadepartamentos").append(lista);
+
+
+                    boton.click(function(){
+                        var idBoton = $(this).val() 
+                        var requestDelete = "/webresources/departamentos/delete/" + idBoton;
+
+                        $.ajax({
+                            url: url + requestDelete,
+                            type: "DELETE",
+                            success: function(){
+                                console.log("Eliminado");
+                                $("#listadepartamentos").html("");
+                                loadDepartamentos();
+                           }
+                        })                    
+                    })
                 })
-                $("#listadepartamentos").html(html);
             })
         }
-    </script>
-</body>
+        </script>
+    </body>
 </html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mostrar detalle empleados departamentos</title>
+</head>
+<body>
+    <h1>Maestro detalle empleados departamentos</h1>
+    <ul id="listadepartamentos"></ul>
+    <table id="tablaempleados" border="1">
+        <thead>
+            <tr>
+                <th>Apellido</th>
+                <th>Oficio</th>
+                <th>Salario</th>
+                <th>Departamento</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        var urlDepartamentos = "https://apicruddepartamentospgs.azurewebsites.net/"
+        var urlEmpleados = "https://apiempleadosspgs.azurewebsites.net/"
+        $(document).ready(function(){
+            loadDepartamentos();
+        })
+
+        function loadDepartamentos(){
+            var requestDepartamentos = "webresources/departamentos";
+            $.getJSON(urlDepartamentos + requestDepartamentos, function(data){
+                console.log("Leyendo...");
+                $.each(data, function(index, departamento){
+                    var numero = departamento.numero;
+                    var nombre = departamento.nombre;
+                    var lista = $("<li>", {"text": nombre + " "})
+                    var boton = $("<button>", {"text":"Empleados", "value": numero})
+                    lista.append(boton)
+                    $("#listadepartamentos").append(lista);
+                    boton.click(function(){
+                        console.log("He pulsado un botón")
+                        var idBoton = $(this).val()
+                        var requestEmpleados = "api/Empleados/EmpleadosDepartamento/" + idBoton
+                        $.ajax({
+                            url: urlEmpleados + requestEmpleados,
+                            type: "GET",
+                            dataType: "json",
+                            success: function(data){
+                                console.log("Success")
+                                var html = "";
+                                $.each(data, function(index, empleado){
+                                    console.log("Dentro del bucle")
+                                    var apellido = empleado.apellido;
+                                    var oficio = empleado.oficio;
+                                    var salario = empleado.salario;
+                                    var departamento = empleado.departamento;
+
+                                    if(departamento == idBoton){
+                                        html += "<tr>"
+                                        html += "<td>" + apellido + "</td>"
+                                        html += "<td>" + oficio + "</td>"
+                                        html += "<td>" + parseInt(salario) + "</td>"
+                                        html += "<td>" + parseInt(departamento) + "</td>"
+                                        html +="</tr>"
+                                    }
+                                })
+                                $("#tablaempleados tbody").html(html);
+                            }
+                        })
+                    })
+                })
+            })
+        }
+    </script>
+</body>
+</html>
